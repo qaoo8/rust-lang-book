@@ -2,15 +2,66 @@
 
 As mentioned in the [“Storing Values with
 Variables”][storing-values-with-variables]<!-- ignore --> section, by default,
-variables are immutable. This is one of many nudges Rust gives you to write
+variables are <martk style="color: greenyellow">immutable</martk>. This is one of many nudges Rust gives you to write
 your code in a way that takes advantage of the safety and easy concurrency that
 Rust offers. However, you still have the option to make your variables mutable.
 Let’s explore how and why Rust encourages you to favor immutability and why
 sometimes you might want to opt out.
+#
+<details>
+    <summary style="font-size: 16px; font-weight: bold; font-style: italic; ">Why Rust variables are <martk style="color: greenyellow">immutable</martk> by default</summary>
+    In Rust, variables are immutable by default to encourage safer and more predictable code. Here are some key reasons for this design choice:
 
-When a variable is immutable, once a value is bound to a name, you can’t change
+1. **Safety and Concurrency**: Immutable variables help prevent <martk style="color: greenyellow">data races</martk> and other <martk style="color: greenyellow">concurrency</martk> issues. Since immutable data cannot be changed after creation, multiple threads can safely read from the same data without needing synchronization mechanisms like locks.
+    #
+    <details>
+    <summary>What is a <martk style="color: greenyellow">data race</martk>?</summary>
+    A data race is a situation where two threads access the same memory location and at least one of the accesses is a write. When this happens, it’s possible for the program to produce incorrect or unexpected results. Data races can occur in Rust because of the way it handles memory allocation and access.
+    </details>
+    <details>
+    <summary>What is a <martk style="color: greenyellow">concurrency </martk>issue?</summary>
+    A concurrency issue is a situation where two or more threads are accessing the same data at the same time, which can lead to unexpected results or errors. Concurrency issues can occur in Rust because of the shared nature of memory and the way it handles concurrency.
+    </details>
+
+    #
+
+
+2. **Predictability**: Immutable variables make the code more predictable and easier to reason about. When you know that a variable cannot be changed, you can be certain about its state at any point in the program, reducing bugs and unintended side effects.
+
+3. **Optimization**: The Rust compiler can perform certain optimizations more effectively with immutable data. Since the compiler knows that the data will not change, it can make assumptions and apply optimizations that wouldn't be safe with mutable data.
+
+4. **Functional Programming Influence**: Rust is influenced by functional programming principles, where immutability is a common practice. This influence brings benefits such as easier reasoning about code and avoiding side effects.
+
+5. **Default to Safe**: Rust's philosophy is to "default to safe" practices. By making variables immutable by default, the language encourages developers to consider carefully when mutability is truly needed, leading to more deliberate and cautious use of mutable state.
+
+To make a variable mutable in Rust, you need to explicitly use the `mut` keyword, which signals that the variable can be changed:
+
+```rust
+let mut x = 5;
+x = 6;
+```
+
+This explicit marking of mutable variables helps developers and reviewers to quickly identify parts of the code where state changes can occur.
+</details>
+
+#
+
+
+When a variable is immutable, once a value <martk style="color: greenyellow"> is bound </martk> to a name, you can’t change
 that value. To illustrate this, generate a new project called *variables* in
 your *projects* directory by using `cargo new variables`.
+
+<details>
+    <summary style="font-size: 16px; font-weight: bold; font-style: italic">Why use <martk style="color: greenyellow">'is bound' not 'was bound'?</martk></summary>
+    In the sentence "When a variable is immutable, once a value is bound to a name, you can't change that value," "bound" is used instead of "was bound" for a couple of reasons:
+
+* **Preserves state:**  "Bound" refers to the <martk style="color: yellow">ongoing connection</martk> between the variable name and the value. It emphasizes that the value remains associated with the name, even though you can't modify the value itself. "Was bound" would imply a <martk style="color: yellow">past action</martk>, suggesting the value might not be bound anymore.
+
+* **Generality:** "Bound" is more general. It applies throughout the lifetime of the variable. The variable remains "bound" to the value until it goes out of scope. 
+
+Here's an analogy: Imagine a variable name as a label stuck on a box. In an immutable variable, the label is permanently attached to the box (the value). "Bound" captures this ongoing connection. "Was bound" would be like saying the label was once attached, but it might have been removed later, which isn't the case with immutability.
+
+</details>
 
 Then, in your new *variables* directory, open *src/main.rs* and replace its
 code with the following code, which won’t compile just yet:
