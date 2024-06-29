@@ -130,13 +130,13 @@ are not allowed to change, but there are a few differences between constants
 and variables.
 
 First, you aren’t allowed to use `mut` with constants. Constants aren’t just
-immutable by default—they’re always immutable. You declare constants using the
-`const` keyword instead of the `let` keyword, and the type of the value *must*
-be annotated. We’ll cover types and type annotations in the next section,
+immutable by default—they’re <martk style="color: greenyellow">always immutable</martk>. You declare constants using the
+`const` keyword instead of the `let` keyword, and the <martk style="color: greenyellow">type of the value *must*
+be annotated</martk>. We’ll cover types and type annotations in the next section,
 [“Data Types”][data-types]<!-- ignore -->, so don’t worry about the details
 right now. Just know that you must always annotate the type.
 
-Constants can be declared in any scope, including the global scope, which makes
+Constants can be declared in <martk style="color: greenyellow"> any scope</martk>, including the global scope, which makes
 them useful for values that many parts of code need to know about.
 
 The last difference is that constants may be set only to a constant expression,
@@ -151,8 +151,8 @@ const THREE_HOURS_IN_SECONDS: u32 = 60 * 60 * 3;
 The constant’s name is `THREE_HOURS_IN_SECONDS` and its value is set to the
 result of multiplying 60 (the number of seconds in a minute) by 60 (the number
 of minutes in an hour) by 3 (the number of hours we want to count in this
-program). Rust’s naming convention for constants is to use all uppercase with
-underscores between words. The compiler is able to evaluate a limited set of
+program). <martk style="color: greenyellow"> Rust’s naming convention for constants is to use all uppercase with
+underscores between words.</martk> The compiler is able to evaluate a limited set of
 operations at compile time, which lets us choose to write out this value in a
 way that’s easier to understand and verify, rather than setting this constant
 to the value 10,800. See the [Rust Reference’s section on constant
@@ -171,6 +171,93 @@ helps to have only one place in your code you would need to change if the
 hardcoded value needed to be updated in the future.
 
 ### Shadowing
+<details>
+    <summary style="font-size: 16px; font-weight: bold; font-style: italic">When to use <martk style="color: greenyellow">shadowing or mut</martk>?</summary>
+    In Rust, `mut` and shadowing are two distinct concepts and serve different purposes. Understanding their differences and appropriate usage is essential for writing clear and effective Rust code.
+
+### `mut`
+
+Using the `mut` keyword allows you to declare a mutable variable, meaning the value of the variable can be changed during its lifetime.
+
+```rust
+fn main() {
+    let mut x = 5;
+    println!("The value of x is: {}", x);
+    x = 6;
+    println!("The value of x is now: {}", x);
+}
+```
+
+In this example, `x` is declared as mutable, so its value can be changed after the initial assignment.
+
+#### When to use `mut`
+
+- Use `mut` when you need to change the value of a variable multiple times within its lifetime.
+- Use `mut` when you need to update a variable in a loop or iteration.
+
+### Shadowing
+
+Shadowing allows you to declare a new variable with the same name as a previous variable. The new variable shadows the previous one, meaning it temporarily overrides the previous variable within its scope.
+
+```rust
+fn main() {
+    let x = 5;
+    println!("The value of x is: {}", x);
+    let x = x + 1; // Shadowing the previous x
+    println!("The value of x is now: {}", x);
+    {
+        let x = x * 2; // Shadowing again in a new scope
+        println!("The value of x in the inner scope is: {}", x);
+    }
+    println!("The value of x is: {}", x);
+}
+```
+
+In this example, `x` is shadowed multiple times, each time creating a new variable with the same name.
+
+#### When to use shadowing
+
+- Use shadowing when you need to perform a series of transformations on a variable but want to keep it immutable.
+- Use shadowing when you need to use the same variable name in different scopes with different values.
+- Shadowing <martk style="color: greenyellow"> allows changing the type of the variable,</martk> whereas `mut` only allows changing the value.
+
+### `mut` vs. Shadowing Comparison
+
+- `mut` allows you to change the value of the same variable but <martk style="color: greenyellow"> does not allow changing its type.
+- Shadowing allows you to redeclare a variable with the same name and <martk style="color: greenyellow"> can change its value and type.
+
+#### Example Comparison
+
+Using `mut`:
+
+```rust
+fn main() {
+    let mut x = 5;
+    println!("The value of x is: {}", x);
+    x = 6;
+    println!("The value of x is now: {}", x);
+}
+```
+
+Using shadowing:
+
+```rust
+fn main() {
+    let x = 5;
+    println!("The value of x is: {}", x);
+    let x = "six"; // Shadowing and changing the type
+    println!("The value of x is now: {}", x);
+}
+```
+
+In summary, `mut` is used for mutable variables, while shadowing is used to redeclare a variable in different scopes or steps. Choosing the appropriate method based on specific needs can make the code clearer and more concise.
+</details>
+<details>    
+    <summary style="font-size: 13px; font-weight: bold; font-style: italic">Quick answer</summary>
+    <martk style="color: greenyellow"> mut </martk> can change the value of a variable, while <martk style="color: greenyellow">shadowing</martk> allows you to redeclare a variable with the same name and change its value and type.
+</details>
+
+****
 
 As you saw in the guessing game tutorial in [Chapter
 2][comparing-the-guess-to-the-secret-number]<!-- ignore -->, you can declare a
